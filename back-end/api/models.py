@@ -1,4 +1,15 @@
 from django.db import models
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
+from django.contrib.auth.models import User
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)
+
 
 class Volunteer(models.Model):
     name = models.CharField(max_length=30)
@@ -10,16 +21,26 @@ class Volunteer(models.Model):
     jacket = models.CharField(max_length=30)
     jacket_size = models.CharField(max_length=30)
     status = models.CharField(max_length=30)
-    team_captain = models.CharField(max_length=30)
+
+    def __str__(self):
+       return self.name
 
 class Event(models.Model):
     name = models.CharField(max_length=30)
-    date = models.DateTimeField()
-    duration = models.IntegerField()
-    location = models.CharField(max_length=40)
-    street = models.TextField(null=True)
-    city = models.TextField(null=True)
-    state = models.TextField(null=True)
-    z_code = models.TextField(null=True)
-    notes = models.TextField(null=True)
+    date = models.CharField(max_length=30)
+    csv = models.FileField(null=True, upload_to='file')
+
+    def __str__(self):
+        return self.name
+
+class Attendee(models.Model):
+    volunteer = models.ForeignKey(Volunteer, related_name="volunteer")
+    event = models.ForeignKey(Event, related_name="event", related_query_name="event")
+    at_event = models.IntegerField(default=0)
+    notes = models.TextField(blank=True, null=True)
+    team_captain = models.ForeignKey(Volunteer, related_name="team_captain", null=True)
+    team_cap_name = models.CharField(max_length=50, null=True)
+
+    def __str__(self):
+        return self.volunteer.name
 

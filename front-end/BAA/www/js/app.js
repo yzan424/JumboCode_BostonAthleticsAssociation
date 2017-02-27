@@ -26,11 +26,27 @@ angular.module('starter', ['ionic'])
 })
 
 checkCredentials = function(){
-        var user = document.getElementById("user").value;
-        var pass = document.getElementById("pass").value;
+    var user = document.getElementById("user").value;
+    var pass = document.getElementById("pass").value;
 
-        alert(user + pass);
-    //alert("invalid login");
-	//window.locations.href = "list.html";
+    var url = "api-token-auth";
+    request = new XMLHttpRequest();
+    request.open("POST", url);
+    request.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+
+    request.onreadystatechange = function() {
+        if (request.readyState == 4 && request.status == 200) {
+            var token = request.responseText;
+            localStorage.setItem('token',token)
+            console.log(token);
+            //window.location.href = "list.html";
+        }
+
+        if (request.readyState == 4 && request.status == 400) {
+            alert("invalid login");
+        }
+    }
+
+    request.send("username=" + user + "&password=" + pass);
 };
 

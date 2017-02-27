@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block scripts %}
+    <script>
+        window.token = "Token " + "{{token}}";
+    </script>
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+{% endblock scripts %}
+    
+{% block stylesheets %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+{% endblock stylesheets %}
+
+{% block left-column %}
+    <div id = "Event-Search">
+        <form role="search" onsubmit="get_all_events(); return false;">
+            <span id = "search">
+              <input placeholder="Search" id="serach_input" type="text"style="width:420px">
+            </span>
+        </form>
+    </div>
+
+    <div id = "year_picker">
+        <div class="btn-group" onclick = "fill_year_picker()">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span id = "findyear">Year </span>  <span class="caret"></span></button>
+                <ul id = "yp" class="dropdown-menu scrollable-menu" role="menu"></ul>
+            </button>
+        </div>
+    </div>
+
+    <div id = "Events">
+        <ul></ul>
+    </div>
+
+    <div id = "New-Event">
+        <button type=submit onclick="add_event()"></button>
+    </div>
+{% endblock left-column %}
+
+{% block right-column %}
+
+
+{% endblock right-column %}
